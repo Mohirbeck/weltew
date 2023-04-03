@@ -71,24 +71,21 @@
   font-style: normal;
   font-weight: 400;
   font-display: swap;
-  src: url('/fonts/Arimo/static/Arimo-Regular.ttf')
-    format("truetype");
+  src: url("/fonts/Arimo/static/Arimo-Regular.ttf") format("truetype");
 }
 @font-face {
   font-family: "Arimo";
   font-style: normal;
   font-weight: 500;
   font-display: swap;
-  src: url('/fonts/Arimo/static/Arimo-Medium.ttf')
-    format("truetype");
+  src: url("/fonts/Arimo/static/Arimo-Medium.ttf") format("truetype");
 }
 @font-face {
   font-family: "Arimo";
   font-style: normal;
   font-weight: 600;
   font-display: swap;
-  src: url('/fonts/Arimo/static/Arimo-SemiBold.ttf')
-    format("truetype");
+  src: url("/fonts/Arimo/static/Arimo-SemiBold.ttf") format("truetype");
 }
 
 body {
@@ -104,4 +101,15 @@ body {
 *::selection {
   background-color: #fec33b;
   color: white;
+}
+
+.index-vars .swiper-pagination-bullet {
+  width: 10px;
+  height: 10px;
+  border-radius: 999px;
+  background-color: #e5e5e5;
+  opacity: 100;
+}
+.index-vars .swiper-pagination-bullet-active {
+  background-color: #fec33b;
 }

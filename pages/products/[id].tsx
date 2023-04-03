@@ -49,9 +49,12 @@ export default function Product({ product, similar }) {
             modules={[Navigation, Pagination]}
             spaceBetween={50}
             slidesPerView={1}
-            navigation={size.width > 768}
+            navigation={size.width > 768 ? {
+              nextEl: '.next',
+              prevEl: '.prev',
+            } : false}
             pagination={{ clickable: true }}
-            style={{ '--swiper-pagination-color': '#fec33b', '--swiper-pagination-bullet-size': '10px', '--swiper-navigation-color': '#fec33b' }}
+            className='index-vars'
           >
             {product.images.map((image: any, i: number) => (
               <SwiperSlide key={image.id}>
@@ -59,6 +62,16 @@ export default function Product({ product, similar }) {
                 </div>
               </SwiperSlide>
             ))}
+            <button className='next absolute right-2 top-1/2 -translate-y-1/2 z-20 lg:block hidden'>
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" className="w-12 h-12 stroke-secondary stroke-2">
+                <path strokeLinecap="round" strokeLinejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5" />
+              </svg>
+            </button>
+            <button className='prev absolute left-2 top-1/2 -translate-y-1/2 z-20 lg:block hidden'>
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" className="w-12 h-12 stroke-secondary stroke-2">
+                <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5" />
+              </svg>
+            </button>
           </Swiper>
           <div className='flex-col flex lg:hidden'>
             {product.collection > 0 && (
@@ -82,7 +95,7 @@ export default function Product({ product, similar }) {
             spaceBetween={30}
             slidesPerView={"auto"}
             slidesPerGroupSkip={1}
-            className='w-full select-none group !pb-8 mt-4'
+            className='w-full select-none group !pb-8 mt-4 index-vars'
             modules={[Navigation, Pagination]}
             navigation={{
               nextEl: '.next',
@@ -91,7 +104,6 @@ export default function Product({ product, similar }) {
             pagination={{
               clickable: true,
             }}
-            style={{ '--swiper-pagination-color': '#fec33b', '--swiper-pagination-bullet-size': '10px' }}
           >
 
             {similar.results.map((item: any) => (

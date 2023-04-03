@@ -11,7 +11,7 @@ import Image from 'next/image';
 
 export default function Home({ banners, categories, bestseller_collections, bestseller_products, secondary_banners, toprated_collections, youtube, instagram }) {
   const size = useWindowSize();
-  console.log(instagram);
+
   return (
     <div className='pb-10'>
       {banners.map((banner: any) => (
@@ -69,8 +69,7 @@ export default function Home({ banners, categories, bestseller_collections, best
               pagination={{
                 clickable: true,
               }}
-              className='w-full select-none group !pb-8 mt-4'
-              style={{ '--swiper-pagination-color': '#fec33b', '--swiper-pagination-bullet-size': '10px' }}
+              className='w-full select-none group !pb-8 mt-4 index-vars'
             >
 
               {bestseller_collections.map((item: any) => (
@@ -121,8 +120,7 @@ export default function Home({ banners, categories, bestseller_collections, best
             pagination={{
               clickable: true,
             }}
-            className='w-full select-none !max-h-[700px] !h-full'
-            style={{ '--swiper-pagination-color': '#fec33b', '--swiper-pagination-bullet-size': '10px' }}
+            className='w-full select-none !max-h-[700px] !h-full index-vars'
           >
             {secondary_banners.map((banner: any) => (
               <SwiperSlide key={banner.id} className="max-h-[700px] h-full">
@@ -173,8 +171,7 @@ export default function Home({ banners, categories, bestseller_collections, best
                 spaceBetween={30}
                 slidesPerView={"auto"}
                 slidesPerGroupSkip={1}
-                className='w-full select-none group !pb-8 mt-4'
-                style={{ '--swiper-pagination-color': '#fec33b', '--swiper-pagination-bullet-size': '10px' }}
+                className='w-full select-none group !pb-8 mt-4 index-vars'
               >
 
                 {toprated_collections.map((item) => (
