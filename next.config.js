@@ -13,16 +13,10 @@ module.exports = {
                 pathname: '/media/**',
             },
             {
-                // https://scontent.cdninstagram.com
                 protocol: 'https',
-                hostname: 'scontent.cdninstagram.com',
+                hostname: '**.cdninstagram.com',
                 pathname: '/**',
             },
-            {
-                protocol: 'https',
-                hostname: 'scontent-ams4-1.cdninstagram.com',
-                pathname: '/**',
-            }
         ],
     },
     env: {
