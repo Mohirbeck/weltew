@@ -22,5 +22,6 @@ jobs:
           script: |
             cd /opt/weltew
             git pull
+            source ~/.bashrc
             npm run build
             pm2 restart all
