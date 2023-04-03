@@ -8,6 +8,11 @@ module.exports = {
                 pathname: '/media/**',
             },
             {
+                protocol: 'https',
+                hostname: 'weltewhome.uz',
+                pathname: '/media/**',
+            },
+            {
                 // https://scontent.cdninstagram.com
                 protocol: 'https',
                 hostname: 'scontent.cdninstagram.com',
