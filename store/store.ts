@@ -1,14 +1,22 @@
 import { configureStore, ThunkAction, Action } from "@reduxjs/toolkit";
-import { customer } from "./customer";
 import { createWrapper } from "next-redux-wrapper";
+import { cart } from "./cart";
+import { customer } from "./customer";
 
 const makeStore = () =>
   configureStore({
     reducer: {
       [customer.name]: customer.reducer,
+      [cart.name]: cart.reducer,
     },
     devTools: true,
   });
+
+export interface State {
+  cart: any;
+  customer: any;
+}
+
 
 export type AppStore = ReturnType<typeof makeStore>;
 export type AppState = ReturnType<AppStore["getState"]>;
@@ -19,4 +27,4 @@ export type AppThunk<ReturnType = void> = ThunkAction<
   Action
 >;
 
-export const wrapper = createWrapper<AppStore>(makeStore);
+export const wrapper = createWrapper<AppStore>(makeStore, { debug: true });

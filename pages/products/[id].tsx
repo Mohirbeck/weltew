@@ -11,7 +11,9 @@ import { useEffect, useState } from 'react';
 // import Thumbnails from "yet-another-react-lightbox/plugins/thumbnails";
 import "yet-another-react-lightbox/plugins/thumbnails.css";
 
-export default function Product({ product, similar }) {
+
+
+export default function Product({ product, similar, cart }) {
   function nextImageUrl(src: any) {
     return `/_next/image?url=${encodeURIComponent(src)}&w=${1920}&q=75`;
   }
@@ -22,6 +24,19 @@ export default function Product({ product, similar }) {
   }, [product.description]);
 
   const size = useWindowSize();
+
+  const addToCart = async (product: any) => {
+    const item = cart.cart.find((item: any) => item.id === product.id);
+    let new_cart = [];
+    if (item) {
+    } else {
+      new_cart = [...cart.cart, { name: product.name, quantity: 1, price: product.price, id: product.id, image: product.images[0].image }];
+    }
+    cart.setCart(new_cart)
+    localStorage.setItem('cart', JSON.stringify(new_cart));
+    const cart_count_el = document.getElementById('cart-count');
+    cart_count_el.innerHTML = new_cart.length.toString();
+  };
 
   const slides = product.images.map((image: any) => ({
     src: nextImageUrl(image.image),
@@ -74,7 +89,29 @@ export default function Product({ product, similar }) {
             </button>
           </Swiper>
           <div className='flex-col flex lg:hidden'>
-            {product.collection > 0 && (
+            <div className='w-full px-5 py-9 border border-grey'>
+              <ul className='mt-4 space-y-2'>
+                <li className='flex justify-between'>
+                  <span className='text-primary'>Наличие:</span>
+                  <span className='text-primary font-bold text-center'>{product.availibility ? 'В наличии' : 'Предзаказ'}</span>
+                </li>
+                <li className='flex justify-between'>
+                  <span className='text-primary'>Цена:</span>
+                  <span className='text-primary font-bold text-center'>{product.price} сум</span>
+                </li>
+                <li className='flex justify-between'>
+                  <span className='text-primary'>Категория:</span>
+                  <span className='text-primary font-bold text-center'>{product.category}</span>
+                </li>
+              </ul>
+              <button className='btn bg-primary hover:bg-[#0d4770] text-white space-x-2 mt-2 w-full' onClick={() => addToCart(product)}>
+                <span>В корзину</span>
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 10.5V6a3.75 3.75 0 10-7.5 0v4.5m11.356-1.993l1.263 12c.07.665-.45 1.243-1.119 1.243H4.25a1.125 1.125 0 01-1.12-1.243l1.264-12A1.125 1.125 0 015.513 7.5h12.974c.576 0 1.059.435 1.119 1.007zM8.625 10.5a.375.375 0 11-.75 0 .375.375 0 01.75 0zm7.5 0a.375.375 0 11-.75 0 .375.375 0 01.75 0z" />
+                </svg>
+              </button>
+            </div>
+            {product.collection && (
               <div className='w-full px-5 pb-9 pt-5 border border-grey mt-8'>
                 <h4 className='tex-lg text-center text-primary font-medium'>Коллекция продукта</h4>
                 <Link href={`/collections/${product.collection.id}`}>
@@ -132,9 +169,29 @@ export default function Product({ product, similar }) {
           <div className='flex-col sticky top-[104px] hidden lg:flex'>
             <div className='w-full px-5 py-9 border border-grey'>
               <h1 className='text-2xl text-primary font-bold text-center'>{product.name}</h1>
+              <ul className='mt-4 space-y-2'>
+                <li className='flex justify-between'>
+                  <span className='text-primary'>Наличие:</span>
+                  <span className='text-primary font-bold text-center'>{product.availibility ? 'В наличии' : 'Предзаказ'}</span>
+                </li>
+                <li className='flex justify-between'>
+                  <span className='text-primary'>Цена:</span>
+                  <span className='text-primary font-bold text-center'>{product.price} сум</span>
+                </li>
+                <li className='flex justify-between'>
+                  <span className='text-primary'>Категория:</span>
+                  <span className='text-primary font-bold text-center'>{product.category}</span>
+                </li>
+              </ul>
+              <button className='btn bg-primary hover:bg-[#0d4770] text-white space-x-2 mt-2 w-full' onClick={() => addToCart(product)}>
+                <span>В корзину</span>
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 10.5V6a3.75 3.75 0 10-7.5 0v4.5m11.356-1.993l1.263 12c.07.665-.45 1.243-1.119 1.243H4.25a1.125 1.125 0 01-1.12-1.243l1.264-12A1.125 1.125 0 015.513 7.5h12.974c.576 0 1.059.435 1.119 1.007zM8.625 10.5a.375.375 0 11-.75 0 .375.375 0 01.75 0zm7.5 0a.375.375 0 11-.75 0 .375.375 0 01.75 0z" />
+                </svg>
+              </button>
             </div>
-            {product.collection > 0 && (
-              <div className='w-full px-5 pb-9 pt-5 border border-grey mt-8'>
+            {product.collection && (
+              <div className='w-full px-5 pb-9 pt-5 border border-grey mt-8 hidden lg:block'>
                 <h4 className='tex-lg text-center text-primary font-medium'>Коллекция продукта</h4>
                 <Link href={`/collections/${product.collection.id}`}>
                   <div className='flex space-x-4 items-start mt-2'>

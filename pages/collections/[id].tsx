@@ -9,11 +9,59 @@ import Counter from '../../components/Counter';
 import Lightbox from "yet-another-react-lightbox";
 import "yet-another-react-lightbox/styles.css";
 import { useEffect, useState } from 'react';
-import NextLink from 'next/link';
 // import Thumbnails from "yet-another-react-lightbox/plugins/thumbnails";
 import "yet-another-react-lightbox/plugins/thumbnails.css";
 
-export default function Product({ collection, similar }) {
+export default function Product({ collection, similar, collections, cart }) {
+  let ps = [];
+  const [products, setProducts] = useState([]);
+  const [default_products, setDefaultProducts] = useState([]);
+  useEffect(() => {
+    let inside = false;
+    let collec: any = localStorage.getItem('collections') || [];
+    if (collec.length > 0) {
+      collec = JSON.parse(collec);
+    }
+    collec.forEach((element: any) => {
+      if (element.id === collection.id) {
+        inside = true;
+      }
+    });
+    if (!inside) {
+      let new_collections = collections.collections;
+      let products = getDefaultProducts(collection.default_products)
+      new_collections.push({
+        name: collection.name, id: collection.id, image: collection.images[0].image, default_products: products
+      });
+      setDefaultProducts(products);
+      collections.setCollections(new_collections);
+      localStorage.setItem('collections', JSON.stringify(new_collections));
+    } else {
+      const col = collec.find((element: any) => element.id === collection.id);
+      setDefaultProducts(col.default_products);
+      collection.products.forEach((element: any, i: number) => {
+        let quantity = 0;
+        col.default_products.forEach((element2: any) => {
+          if (element.id === element2.id) {
+            quantity = element2.quantity;
+          }
+        });
+        ps.push({ name: element.name, id: element.id, image: element.images[0]?.image || '/images/placeholder.webp', price: Number(element.price), quantity: quantity });
+      });
+      setProducts(ps);
+      ps = [];
+    }
+  }, [collection.products]);
+
+  const getDefaultProducts = (ps: any) => {
+    let default_products = [];
+    ps.forEach((element: any) => {
+      default_products.push({ name: element.name, id: element.id, image: element.images[0]?.image || '/images/placeholder.webp', price: Number(element.price), quantity: 1 });
+    });
+    return default_products;
+  }
+
+
   function nextImageUrl(src: any) {
     return `/_next/image?url=${encodeURIComponent(src)}&w=${1920}&q=75`;
   }
@@ -35,7 +83,54 @@ export default function Product({ collection, similar }) {
     ],
     alt: collection.name,
   }));
-  const [quantities, setQuantities] = useState(Array.from({ length: collection.products.length }, () => 0));
+  const changeCount = (count: number, id: number) => {
+    const i = default_products.findIndex((element: any) => element.id === id);
+    const p_index = products.findIndex((element: any) => element.id === id);
+    let dps = default_products;
+    if (count < 1) {
+      dps.splice(i, 1);
+    }
+    else {
+      if (i < 0) {
+        dps.push({ name: products[p_index].name, id: products[p_index].id, image: products[p_index].image, price: products[p_index].price, quantity: count });
+      } else {
+        dps[i].quantity = count;
+      }
+    }
+    setDefaultProducts([...dps]);
+    let new_collections = collections.collections;
+    let col = new_collections.find((element: any) => element.id === collection.id);
+    col.default_products = dps;
+    new_collections[new_collections.findIndex((element: any) => element.id === collection.id)] = col;
+    collections.setCollections(new_collections);
+    localStorage.setItem('collections', JSON.stringify(new_collections));
+  }
+
+  const getTotal = () => {
+    let total = 0;
+    default_products.forEach((element: any) => {
+      total += element.price * element.quantity;
+    });
+    return total;
+  }
+
+  const addToCart = async (collection: any) => {
+    const item = cart.cart.find((item: any) => item.id === collection.id);
+    let new_cart = [];
+    if (item) {
+    } else {
+      new_cart = [...cart.cart, { id: collection.id, collection: true }];
+    }
+    cart.setCart(new_cart)
+    localStorage.setItem('cart', JSON.stringify(new_cart));
+    const cart_count_el = document.getElementById('cart-count');
+    cart_count_el.innerHTML = new_cart.length.toString();
+  };
+
+  const formatCurrency = (num: number) => {
+    return num.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1 ')
+  }
+
   return (
     <div className='lg-container pt-6 relative scroll-smooth'>
       <Lightbox
@@ -89,17 +184,27 @@ export default function Product({ collection, similar }) {
                     </tr>
                   </thead>
                   <tbody>
-                    {collection.default_products.map((product: any, i: number) => (
+                    {default_products?.map((product: any, i: number) => (
                       <tr key={product.id}>
                         <td className='text-primary font-medium text-[13px] py-1 text-left'>{product.name}</td>
-                        <td className='text-primary font-medium text-[13px] py-1 text-center'>{quantities[i]}</td>
+                        <td className='text-primary font-medium text-[13px] py-1 text-center'>{product.quantity}</td>
                         <td className='text-primary font-medium text-[13px] py-1 text-center'>{product.price > 0 ? product.price : '-'}</td>
                       </tr>
                     ))}
                   </tbody>
                 </table>
               </div>
+              <div className='flex items-center justify-between mt-4'>
+                <p className='text-primary font-medium text-[13px]'>Итого</p>
+                <p className='text-primary font-semibold text-lg'>{formatCurrency(getTotal())} сум</p>
+              </div>
               <button onClick={() => { document.getElementById('products').scrollIntoView({ behavior: 'smooth' }) }} className='w-full text-sky-600 underline text-center mt-2'>Изменить содержимое сета</button>
+              <button className='btn bg-primary hover:bg-[#0d4770] text-white space-x-2 mt-2 w-full' onClick={() => addToCart(collection)}>
+                <span>В корзину</span>
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 10.5V6a3.75 3.75 0 10-7.5 0v4.5m11.356-1.993l1.263 12c.07.665-.45 1.243-1.119 1.243H4.25a1.125 1.125 0 01-1.12-1.243l1.264-12A1.125 1.125 0 015.513 7.5h12.974c.576 0 1.059.435 1.119 1.007zM8.625 10.5a.375.375 0 11-.75 0 .375.375 0 01.75 0zm7.5 0a.375.375 0 11-.75 0 .375.375 0 01.75 0z" />
+                </svg>
+              </button>
             </div>
           </div>
           <h3 className='text-3xl text-primary text-center font-bold mt-8 hidden lg:block'>{collection.name}</h3>
@@ -108,20 +213,14 @@ export default function Product({ collection, similar }) {
           <h5 className='lg:my-8 my-4 text-primary font-semibold text-lg lg:text-2xl text-center' id='products'>Настроить</h5>
           <table className='w-full border-collapse'>
             <tbody>
-              {collection.products.map((product: any, i: number) => (
+              {products.map((product: any, i: number) => (
                 <tr key={product.id} className='flex flex-col lg:flex-row items-center justify-between'>
                   <td className='border-[0.5px] border-grey w-full lg:p-4 p-2'>
                     <div className='flex items-center lg:space-x-10 space-x-3'>
-                      <img src={product.images[0]?.image || '/images/placeholder.webp'} alt={product.name} className='lg:h-[160px] h-[75px] aspect-video object-contain' />
+                      <img src={product.image || '/images/placeholder.webp'} alt={product.name} className='lg:h-[160px] h-[75px] aspect-video object-contain' />
                       <div className='flex flex-col lg:flex-row lg:items-center lg:flex-grow justify-between space-y-4 lg:space-y-0'>
                         <Link className='text-primary font-medium text-sm lg:text-lg' href={`/products/${product.id}`}>{product.name}</Link>
-                        <Counter count={quantities[i]} changeCount={
-                          (count: number) => {
-                            const newQuantities = [...quantities];
-                            newQuantities[i] = count;
-                            setQuantities(newQuantities);
-                          }
-                        } />
+                        <Counter min={0} max={15} count={product.quantity} changeCount={(count: number) => changeCount(count, product.id)} />
                       </div>
                     </div>
                   </td>
@@ -181,17 +280,27 @@ export default function Product({ collection, similar }) {
                     </tr>
                   </thead>
                   <tbody>
-                    {collection.default_products.map((product: any, i: number) => (
+                    {default_products?.map((product: any, i: number) => (
                       <tr key={product.id}>
                         <td className='text-primary font-medium text-[13px] py-1 text-left'>{product.name}</td>
-                        <td className='text-primary font-medium text-[13px] py-1 text-center'>{quantities[i]}</td>
+                        <td className='text-primary font-medium text-[13px] py-1 text-center'>{product.quantity}</td>
                         <td className='text-primary font-medium text-[13px] py-1 text-center'>{product.price > 0 ? product.price : '-'}</td>
                       </tr>
                     ))}
                   </tbody>
                 </table>
               </div>
+              <div className='flex items-center justify-between mt-4'>
+                <p className='text-primary font-medium text-[13px]'>Итого</p>
+                <p className='text-primary font-semibold text-lg'>{formatCurrency(getTotal())} сум</p>
+              </div>
               <button onClick={() => { document.getElementById('products').scrollIntoView({ behavior: 'smooth' }) }} className='w-full text-sky-600 underline text-center mt-2'>Изменить содержимое сета</button>
+              <button className='btn bg-primary hover:bg-[#0d4770] text-white space-x-2 mt-2 w-full' onClick={() => addToCart(collection)}>
+                <span>В корзину</span>
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 10.5V6a3.75 3.75 0 10-7.5 0v4.5m11.356-1.993l1.263 12c.07.665-.45 1.243-1.119 1.243H4.25a1.125 1.125 0 01-1.12-1.243l1.264-12A1.125 1.125 0 015.513 7.5h12.974c.576 0 1.059.435 1.119 1.007zM8.625 10.5a.375.375 0 11-.75 0 .375.375 0 01.75 0zm7.5 0a.375.375 0 11-.75 0 .375.375 0 01.75 0z" />
+                </svg>
+              </button>
             </div>
           </div>
         </div>

@@ -3,22 +3,22 @@ import React from "react";
 export default class Counter extends React.Component {
   constructor(props) {
     super(props);
-    this.state = { count: props.count, timeout: null, interval: null };
+    this.state = { count: props.count, timeout: null, interval: null, min: props?.min || 0, max: props?.max || 15 };
   }
 
 
 
   increment = () => {
-    if (this.state.count < 15) {
+    if (this.state.count < this.state.max) {
       this.setState((state) => ({ count: state.count + 1 }));
-      this.changeParentCount(this.props.count + 1);
+      this.changeParentCount(this.state.count + 1);
     }
   };
 
   decrement = () => {
-    if (this.state.count > 0) {
+    if (this.state.count > this.state.min) {
       this.setState((state) => ({ count: state.count - 1 }));
-      this.changeParentCount(this.props.count - 1);
+      this.changeParentCount(this.state.count - 1);
     }
   };
 
@@ -76,11 +76,11 @@ export default class Counter extends React.Component {
         <input
           value={this.state.count}
           onChange={(e) => {
-            if (e.target.value > 15) {
-              this.setState({ count: 15 });
+            if (e.target.value > this.state.max) {
+              this.setState({ count: this.state.max });
               this.changeParentCount();
-            } else if (e.target.value < 0) {
-              this.setState({ count: 0 });
+            } else if (e.target.value < this.state.min) {
+              this.setState({ count: this.state.min });
               this.changeParentCount();
             } else {
               this.setState({ count: e.target.value });

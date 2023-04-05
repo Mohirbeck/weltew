@@ -14,9 +14,17 @@ export default function Home({ banners, categories, bestseller_collections, best
 
   return (
     <div className='pb-10'>
+      <Head>
+        <title>Главная</title>
+        <meta property="og:title" content="Главная" key="title" />
+        <meta name="description" content="Мебель от турецкого бренда с мировым именем Weltew Home с гарантией 24 месяца. ⭐ В наличии более 30 коллекций мягкой и корпусной мебели." />
+        <meta property="og:description" content="Мебель от турецкого бренда с мировым именем Weltew Home с гарантией 24 месяца. ⭐ В наличии более 30 коллекций мягкой и корпусной мебели." />
+      </Head>
       {banners.map((banner: any) => (
         <a key={banner.id} href={banner.link}>
-          <img src={banner.image} className="banner w-full" />
+          <div className="banner w-full relative">
+            <Image src={banner.image} fill alt='banner' />
+          </div>
         </a>
       ))}
       <Swiper
@@ -35,7 +43,9 @@ export default function Home({ banners, categories, bestseller_collections, best
             <Link href={`/category/${category.id}`}>
               <div className='ascpect-square w-[80px] lg:w-[100px] text-xs text-primary text-center font-medium'>
                 <div className='mb-2 w-full flex items-center justify-center bg-[#f6f6f6] transtion h-[60px] lg:h-[80px] rounded-xl border border-transparent hover:border-primary hover:bg-white'>
-                  <img src={category.image} className='w-12 aspect-square' />
+                  <div className='w-12 aspect-square relative'>
+                    <Image src={category.image || '/images/placeholder.webp'} fill alt={category.name} />
+                  </div>
                 </div>
                 {category.name}
               </div>

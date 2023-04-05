@@ -1,4 +1,7 @@
-module.exports = {
+const withPWA = require('next-pwa')({
+    dest: 'public',
+})
+module.exports = withPWA({
     images: {
         remotePatterns: [
             {
@@ -22,4 +25,4 @@ module.exports = {
     env: {
         API_URL: process.env.apiUrl
     }
-}
+})

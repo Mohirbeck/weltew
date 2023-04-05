@@ -14,6 +14,14 @@ export default function Header(props: any) {
     useEffect(() => {
         setMobileOpen(false);
     }, [router.route]);
+    useEffect(() => {
+        let cart_count = localStorage.getItem('cart') || "0";
+        const cart_count_el = document.getElementById('cart-count');
+        if (cart_count !== "0") {
+            cart_count = JSON.parse(cart_count).length.toString();
+        }
+        cart_count_el.innerHTML = cart_count;
+    }, []);
     return (
         <div>
             <div className="w-full fixed bg-white z-50 shadow">
@@ -42,7 +50,7 @@ export default function Header(props: any) {
                                     </svg>
                                 </div>
                             </div>
-                            <button className="lg:hidden block">
+                            <button className="lg:hidden block" aria-label="Поиск">
                                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} className="w-6 h-6 stroke-primary">
                                     <path strokeLinecap="round" strokeLinejoin="round" d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z" />
                                 </svg>
@@ -64,7 +72,7 @@ export default function Header(props: any) {
                                             </g>
                                         </g>
                                     </svg>
-                                    <span className="w-4 h-4 flex items-center justify-center rounded-full text-[10px] indicator-item bg-secondary border-secondary text-white">0</span>
+                                    <span id="cart-count" className="w-4 h-4 flex items-center justify-center rounded-full text-[10px] indicator-item bg-secondary border-secondary text-white"></span>
                                 </div>
                             </label>
                         </div>

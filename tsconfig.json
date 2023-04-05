@@ -22,7 +22,7 @@
     "next-env.d.ts",
     "**/*.ts",
     "**/*.tsx"
-, "components/Counter.jsx"  ],
+, "components/Counter.jsx", "components/Form.jsx"  ],
   "exclude": [
     "node_modules"
   ]
