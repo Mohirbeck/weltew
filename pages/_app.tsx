@@ -21,6 +21,17 @@ function MyApp({ Component, pageProps, navigationProps, ...rest }) {
             router.events.off('routeChangeStart', handleRouteChange)
         }
     }, [router.events])
+    
+
+    const [toast, setToast] = React.useState({ text: '', show: false, success: false });
+    React.useEffect(() => {
+        if (toast.show) {
+            setTimeout(() => {
+                setToast({ ...toast, show: false })
+            }, 4000)
+        }
+    }, [toast.show])
+
     const [cart, setCart] = React.useState([]);
     const [collections, setCollections] = React.useState([]);
     React.useEffect(() => {
@@ -126,9 +137,16 @@ function MyApp({ Component, pageProps, navigationProps, ...rest }) {
                 <Header />
                 <React.StrictMode>
                     <div className='py-[72px]'>
-                        <Component {...pageProps} cart={{ cart, setCart }} collections={{ collections, setCollections }} />
+                        <Component {...pageProps} cart={{ cart, setCart }} collections={{ collections, setCollections }} setToast={setToast} />
                     </div>
                 </React.StrictMode>
+                <div className={`toast toast-top toast-end z-50 transition-all duration-500 ${toast.show ? 'opacity-100' : 'opacity-0'}`}>
+                    <div className={`alert rounded ${toast.success ? 'alert-success' : 'alert-error'}`}>
+                        <div>
+                            <span className='text-white text-lg'>{toast.text}</span>
+                        </div>
+                    </div>
+                </div>
                 <Footer contacts={navigationProps} />
             </div>
             <div className="drawer-side">

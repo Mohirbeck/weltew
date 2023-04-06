@@ -1,18 +1,19 @@
 import Form from '../components/Form'
 import { useState } from 'react'
+import { useRouter } from 'next/router';
 
-export default function Checkout({ name, cart }) {
-    const [text, setText] = useState('');
-    const [success, setSuccess] = useState(false);
-    const [open, setOpen] = useState(false);
+export default function Checkout({ name, cart, setToast }) {
+    const router = useRouter();
 
     const saveData = (data: any) => {
         let items = { products: [], collections: [], total: getTotal(), ...data }
         cart.cart.forEach((item: any) => {
             if (item?.collection) {
+                let coll = JSON.parse(localStorage.getItem('collections')).find((item: any) => item.id === item.id);
                 items.collections.push(
                     {
                         id: item.id,
+                        name: coll.name,
                         products: getProductsCollection(item.id)
                     }
                 )
@@ -28,13 +29,11 @@ export default function Checkout({ name, cart }) {
                 },
                 body: JSON.stringify(items)
             })
-            setText('Ваш заказ успешно оформлен. Мы свяжемся с вами в ближайшее время.')
-            setSuccess(true);
-            setOpen(true);
+            setToast({ text: 'Ваш заказ успешно оформлен.\nМы свяжемся с вами в ближайшее время.', success: 'true', show: true })
+            localStorage.removeItem('cart');
+            router.push('/');
         } else {
-            setText('Вы не выбрали ни одного товара.')
-            setSuccess(false);
-            setOpen(true);
+            setToast({ text: 'Вы не выбрали ни одного товара.', success: false, show: true })
         }
     }
     const getTotal = () => {
