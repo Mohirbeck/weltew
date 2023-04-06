@@ -23,6 +23,7 @@ module.exports = withPWA({
         ],
     },
     env: {
-        API_URL: process.env.apiUrl
+        API_URL: process.env.apiUrl,
+        storageUrl: process.env.storageUrl,
     }
 })

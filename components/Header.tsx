@@ -43,6 +43,11 @@ export default function Header(props: any) {
                                     id="search"
                                     className="block w-[228px] h-10 pl-4 py-2 rounded-full bg-[#f2f2f2] border-[#f2f2f2] pr-10 sm:text-sm transition focus:bg-white focus:border-secondary focus:outline-none focus:ring-2 focus:ring-secondary"
                                     placeholder="Поиск"
+                                    onKeyDown={(e) => {
+                                        if (e.key === 'Enter') {
+                                            router.push(`/search?q=${e.currentTarget.value}`);
+                                        }
+                                    }}
                                 />
                                 <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-3">
                                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} className="w-6 h-6 stroke-primary">
@@ -89,6 +94,11 @@ export default function Header(props: any) {
                     <li className="border-b border-grey py-2 lg-container">
                         <Link href={'/about'} className={`text-lg hover:text-[#d02d8b] transition ${router.route === "/about" ? 'text-[#d02d8b]' : 'text-primary'}`}>
                             О Weltew
+                        </Link>
+                    </li>
+                    <li className="border-b border-grey py-2 lg-container">
+                        <Link href={'/collections/category'} className={`text-lg hover:text-[#d02d8b] transition ${router.route === "/about" ? 'text-[#d02d8b]' : 'text-primary'}`}>
+                            Сеты
                         </Link>
                     </li>
                     <li className="border-b border-grey py-2 lg-container">

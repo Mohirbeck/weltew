@@ -36,7 +36,7 @@ export default function ProductCard({ images, name, category, id, horizontal = f
             </Link>
             <div className={horizontal ? 'flex-grow flex flex-col relative h-full justify-center' : 'p-6 flex-grow'}>
                 <Link href={to} className={horizontal ? 'block text-primary font-medium text-right text-[25px]' : 'block text-primary font-medium text-lg'}>{name}</Link>
-                <Link href={to} className={horizontal ? 'block text-primary font-medium text-right text-base' : 'block text-primary font-medium text-sm'}>{category.name}</Link>
+                <Link href={to} className={horizontal ? 'block text-primary font-medium text-right text-base' : 'block text-primary font-medium text-sm'}>{typeof category === 'string' ? category : category.name}</Link>
                 <div className={horizontal ? 'absolute w-full left-0 bottom-0' : 'mt-12'}>
                     <Link href={to} className="py-2 bg-transparent border border-grey hover:bg-grey w-full transition text-primary rounded-full flex space-x-2 items-center justify-center">
                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" className="w-6 h-6 stroke-secondary stroke-2">
