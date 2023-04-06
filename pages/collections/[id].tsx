@@ -48,10 +48,10 @@ export default function Product({ collection, similar, collections, cart }) {
         });
         ps.push({ name: element.name, id: element.id, image: element.images[0]?.image || '/images/placeholder.webp', price: Number(element.price), quantity: quantity });
       });
-      setProducts(ps);
+      setProducts([...ps]);
       ps = [];
     }
-  }, [collection.products]);
+  });
 
   const getDefaultProducts = (ps: any) => {
     let default_products = [];
