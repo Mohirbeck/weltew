@@ -1,5 +1,6 @@
 import '../styles/globals.css'
 import Header from '../components/Header';
+import Head from 'next/head';
 import Footer from '../components/Footer';
 import React from 'react';
 import { useRouter } from 'next/router'
@@ -21,7 +22,7 @@ function MyApp({ Component, pageProps, navigationProps, ...rest }) {
             router.events.off('routeChangeStart', handleRouteChange)
         }
     }, [router.events])
-    
+
 
     const [toast, setToast] = React.useState({ text: '', show: false, success: false });
     React.useEffect(() => {
@@ -131,6 +132,9 @@ function MyApp({ Component, pageProps, navigationProps, ...rest }) {
 
     return (
         <div className='bg-white drawer drawer-end'>
+            <Head>
+                <meta name="facebook-domain-verification" content="pnsd0lf3a2ccvzn3lo73s6y6xajhk0" />
+            </Head>
             <input id="cart-drawer" type="checkbox" className="drawer-toggle" />
             <div className="drawer-content">
                 <div className='text-transparent h-0' id='top'>top</div>
