@@ -7,6 +7,7 @@ import { useRouter } from 'next/router'
 import Image from 'next/image';
 import Link from 'next/link';
 import Counter from '../components/Counter';
+import Script from 'next/script';
 
 let navigationPropsCache;
 
@@ -134,7 +135,53 @@ function MyApp({ Component, pageProps, navigationProps, ...rest }) {
         <div className='bg-white drawer drawer-end'>
             <Head>
                 <meta name="facebook-domain-verification" content="pnsd0lf3a2ccvzn3lo73s6y6xajhk0" />
+                <meta name="facebook-domain-verification" content="4jw1d10tqdseilrx1310lk37pext04" />
             </Head>
+
+            {/* Google */}
+            <Script async src="https://www.googletagmanager.com/gtag/js?id=G-JD9D7P9XP5"></Script>
+            <Script>
+                {`window.dataLayer = window.dataLayer || [];
+                function gtag(){dataLayer.push(arguments);}
+                gtag('js', new Date());
+
+                gtag('config', 'G-JD9D7P9XP5');`}
+            </Script>
+
+            {/* Yandex */}
+            <Script type="text/javascript" >
+                {`(function(m,e,t,r,i,k,a){m[i] = m[i]function(){(m[i].a = m[i].a[]).push(arguments)};
+                    m[i].l=1*new Date();
+                    for (var j = 0; j < document.scripts.length; j++) {if (document.scripts[j].src === r) { return; }}
+                        k=e.createElement(t),a=e.getElementsByTagName(t)[0],k.async=1,k.src=r,a.parentNode.insertBefore(k,a)})
+                    (window, document, "script", "https://mc.yandex.ru/metrika/tag.js", "ym");
+
+                    ym(93118356, "init", {
+                        clickmap:true,
+                    trackLinks:true,
+                    accurateTrackBounce:true,
+                    webvisor:true
+                });`}
+            </Script>
+            <noscript><div><img src="https://mc.yandex.ru/watch/93118356" style={{ position: 'absolute', left: '-9999px' }} alt="" /></div></noscript>
+
+            {/* Pixel */}
+            <Script>
+                {`!function(f,b,e,v,n,t,s)
+                {if(f.fbq)return;n=f.fbq=function(){n.callMethod ?
+                    n.callMethod.apply(n, arguments) : n.queue.push(arguments)};
+                if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+                n.queue=[];t=b.createElement(e);t.async=!0;
+                t.src=v;s=b.getElementsByTagName(e)[0];
+                s.parentNode.insertBefore(t,s)}(window, document,'script',
+                'https://connect.facebook.net/en_US/fbevents.js');
+                fbq('init', '893313091634356');
+                fbq('track', 'PageView');`}
+            </Script>
+            <noscript><img height="1" width="1" style={{ display: 'none' }}
+                src="https://www.facebook.com/tr?id=893313091634356&ev=PageView&noscript=1"
+            /></noscript>
+
             <input id="cart-drawer" type="checkbox" className="drawer-toggle" />
             <div className="drawer-content">
                 <div className='text-transparent h-0' id='top'>top</div>
