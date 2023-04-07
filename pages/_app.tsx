@@ -135,7 +135,6 @@ function MyApp({ Component, pageProps, navigationProps, ...rest }) {
         <div className='bg-white drawer drawer-end'>
             <Head>
                 <meta name="facebook-domain-verification" content="pnsd0lf3a2ccvzn3lo73s6y6xajhk0" />
-                <meta name="facebook-domain-verification" content="4jw1d10tqdseilrx1310lk37pext04" />
             </Head>
 
             {/* Google */}
