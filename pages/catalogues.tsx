@@ -5,6 +5,21 @@ import Image from "next/image";
 
 export default function About({ catalogues }) {
     const router = useRouter();
+    if (typeof window !== 'undefined') {
+        window.localStorage.setItem('breadcrumbs',
+            JSON.stringify([
+                {
+                    label: 'Главная',
+                    path: '/'
+                },
+                {
+                    label: 'Каталоги',
+                    path: router.route
+                }
+            ])
+        );
+        window.dispatchEvent(new Event("storage"));
+    }
     return (
         <div className="lg-container">
             <h1 className="text-xl text-primary font-semibold my-2 lg:my-4">Каталоги</h1>
@@ -48,7 +63,7 @@ export default function About({ catalogues }) {
                 <div className="text-primary border border-grey lg:py-8 py-2 lg:px-10 px-2 lg:col-span-4">
                     <div className="grid grid-cols-1 lg:grid-cols-3 gap-x-7 gap-y-7">
                         {catalogues.results.map((item: any, index: number) => (
-                            <div className="group border border-grey w-full min-h-[400px]">
+                            <div className="group border border-grey w-full min-h-[400px]" key={index}>
                                 <div className="w-full aspect-[16/11] relative">
                                     <Image src={item.image} alt={item.title} fill />
                                 </div>

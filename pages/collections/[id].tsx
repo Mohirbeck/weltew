@@ -11,6 +11,7 @@ import "yet-another-react-lightbox/styles.css";
 import { useEffect, useState } from 'react';
 // import Thumbnails from "yet-another-react-lightbox/plugins/thumbnails";
 import "yet-another-react-lightbox/plugins/thumbnails.css";
+import useWindowDimensions from '../../hooks/useWindowDimension';
 
 export default function Product({ collection, similar, collections, cart }) {
   let ps = [];
@@ -51,7 +52,7 @@ export default function Product({ collection, similar, collections, cart }) {
       setProducts([...ps]);
       ps = [];
     }
-  });
+  }, [collection]);
 
   const getDefaultProducts = (ps: any) => {
     let default_products = [];
@@ -69,9 +70,10 @@ export default function Product({ collection, similar, collections, cart }) {
   const [description, setDescription] = useState('<p></p>');
   useEffect(() => {
     setDescription(collection.description);
-  }, [collection.description]);
+  }, [description]);
 
-  const size = useWindowSize();
+  const { width, height } = useWindowDimensions();
+
 
   const slides = collection.images.map((image: any) => ({
     src: nextImageUrl(image.image),
@@ -147,7 +149,7 @@ export default function Product({ collection, similar, collections, cart }) {
             modules={[Navigation, Pagination]}
             spaceBetween={50}
             slidesPerView={1}
-            navigation={size.width > 768 ? {
+            navigation={width > 768 ? {
               nextEl: '.next',
               prevEl: '.prev',
             } : false}
@@ -210,7 +212,7 @@ export default function Product({ collection, similar, collections, cart }) {
           <h3 className='text-3xl text-primary text-center font-bold mt-8 hidden lg:block'>{collection.name}</h3>
           <div className='lg:mt-8 mt-4' dangerouslySetInnerHTML={{ __html: description }}>
           </div>
-          <h5 className='lg:my-8 my-4 text-primary font-semibold text-lg lg:text-2xl text-center' id='products'>Настроить</h5>
+          <h5 className='lg:my-8 my-4 text-primary font-semibold text-lg lg:text-2xl text-center' id='products'>Комплектация</h5>
           <table className='w-full border-collapse'>
             <tbody>
               {products.map((product: any, i: number) => (
@@ -251,6 +253,7 @@ export default function Product({ collection, similar, collections, cart }) {
                   name={item.name}
                   category={item.category}
                   images={item.images}
+                  to={`/collections/${item.id}`}
                 />
               </SwiperSlide>
             ))}
@@ -315,36 +318,4 @@ export async function getServerSideProps({ params }) {
   res = await fetch(`${process.env.apiUrl}/collections/${params.id}/similar`);
   const similar = await res.json();
   return { props: { collection, similar } };
-}
-
-
-function useWindowSize() {
-  // Initialize state with undefined width/height so server and client renders match
-  // Learn more here: https://joshwcomeau.com/react/the-perils-of-rehydration/
-  const [windowSize, setWindowSize] = useState({
-    width: undefined,
-    height: undefined,
-  });
-
-  useEffect(() => {
-    // only execute all the code below in client side
-    // Handler to call on window resize
-    function handleResize() {
-      // Set window width/height to state
-      setWindowSize({
-        width: window.innerWidth,
-        height: window.innerHeight,
-      });
-    }
-
-    // Add event listener
-    window.addEventListener("resize", handleResize);
-
-    // Call handler right away so state gets updated with initial window size
-    handleResize();
-
-    // Remove event listener on cleanup
-    return () => window.removeEventListener("resize", handleResize);
-  }, []); // Empty array ensures that effect is only run on mount
-  return windowSize;
 }

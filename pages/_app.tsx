@@ -11,21 +11,32 @@ import Counter from '../components/Counter';
 import Script from 'next/script';
 import * as fbq from '../lib/fpixel'
 
-let navigationPropsCache;
+let navigationPropsCache: any;
 
 function MyApp({ Component, pageProps, navigationProps, ...rest }) {
     const router = useRouter()
     React.useEffect(() => {
-        fbq.pageview()
-        const handleRouteChange = (url: string) => {
-            const top = document.getElementById('top')
-            top.scrollIntoView({ behavior: 'smooth' })
-        }
-        router.events.on('routeChangeStart', handleRouteChange)
-        return () => {
-            router.events.off('routeChangeStart', handleRouteChange)
-        }
+        router.events.on('routeChangeComplete', () => {
+            fbq.pageview();
+            const top = document.getElementById('top');
+            top.scrollIntoView();
+        })
     }, [router.events])
+
+    // if (typeof window !== 'undefined') {
+    //     let crumbs: any = window.localStorage.getItem('breadcrumbs') || [];
+    //     if (crumbs.length > 0) {
+    //         crumbs = JSON.parse(crumbs);
+    //     } else {
+    //         crumbs = [
+    //             {
+    //                 label: 'Главная',
+    //                 path: '/'
+    //             },
+    //         ];
+    //     }
+    //     setBreadcrumbs([...crumbs]);
+    // }
 
 
     const [toast, setToast] = React.useState({ text: '', show: false, success: false });
@@ -45,8 +56,6 @@ function MyApp({ Component, pageProps, navigationProps, ...rest }) {
             cartt = JSON.parse(cartt);
         }
         setCart(cartt);
-    }, [])
-    React.useEffect(() => {
         let collections: any = localStorage.getItem('collections') || [];
         if (collections.length > 0) {
             collections = JSON.parse(collections);

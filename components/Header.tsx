@@ -3,17 +3,20 @@ import Link from "next/link";
 import Image from 'next/image';
 import { useEffect, useState } from "react";
 import { useRouter } from "next/router";
+import Breadcrumbs from "./Breadcrumbs";
+import useWindowDimensions from '../hooks/useWindowDimension';
 
 export default function Header(props: any) {
     const [mobileOpen, setMobileOpen] = useState(false);
     const handleDrawerToggle = () => {
         setMobileOpen(!mobileOpen);
     };
-    const size = useWindowSize();
+    const { width, height } = useWindowDimensions();
     const router = useRouter();
     useEffect(() => {
         setMobileOpen(false);
     }, [router.route]);
+    const [breadcrumbs, setBreadcrumbs] = useState([]);
     useEffect(() => {
         let cart_count = localStorage.getItem('cart') || "0";
         const cart_count_el = document.getElementById('cart-count');
@@ -21,18 +24,34 @@ export default function Header(props: any) {
             cart_count = JSON.parse(cart_count).length.toString();
         }
         cart_count_el.innerHTML = cart_count;
+        window.addEventListener('storage', () => {
+            let crumbs: any = localStorage.getItem('breadcrumbs') || [];
+            if (crumbs.length > 0) {
+                crumbs = JSON.parse(crumbs);
+            } else {
+                crumbs = [
+                    {
+                        label: 'Главная',
+                        path: '/'
+                    }
+                ]
+            }
+            setBreadcrumbs([...crumbs]);
+        })
     }, []);
+
+
     return (
         <div>
-            <div className="w-full fixed bg-white z-50 shadow">
-                <div className="navbar lg-container bg-white lg:px-10 px-4 py-0">
+            <div className={`w-full fixed bg-white z-50 ${breadcrumbs.length > 1 ? '' : 'shadow'}`}>
+                <div className={`navbar lg-container bg-white lg:px-10 px-4 py-0`}>
                     <div className="block lg:hidden cursor-pointer mr-2" onClick={handleDrawerToggle}>
                         <span className={`${mobileOpen ? 'rotate-45 translate-y-[7px] w-[25px]' : 'w-[19px]'} h-[2px] bg-primary rounded transition-all duration-[400ms] block`}></span>
                         <span className={`${mobileOpen ? 'opacity-0' : ''} w-[25px] h-[2px] my-1.5 bg-primary rounded transition-all duration-[400ms] block`}></span>
                         <span className={`${mobileOpen ? '-rotate-45 translate-y-[-9px] w-[25px]' : 'w-[19px]'} h-[2px] bg-primary rounded transition-all duration-[400ms] block`}></span>
                     </div>
                     <div className="flex-1">
-                        <Link href={'/'}><Image src="/images/logo.svg" width={size.width > 768 ? 290 : 195} height={100} alt={`logo`} /></Link>
+                        <Link href={'/'}><Image src="/images/logo.svg" width={width > 768 ? 290 : 195} height={100} alt={`logo`} /></Link>
                     </div>
                     <div className="flex space-x-2 py-3">
                         <div>
@@ -83,6 +102,13 @@ export default function Header(props: any) {
                         </div>
                     </div>
                 </div>
+                <div className={`bg-white border-y border-grey ${breadcrumbs.length > 1 ? 'block' : 'hidden'}`}>
+                    <div className="lg-container px-4 py-2">
+                        <Breadcrumbs
+                            items={breadcrumbs}
+                        />
+                    </div>
+                </div>
             </div>
             <div className={`fixed top-0 left-0 w-full h-full bg-white shadow pt-[72px] transition-all duration-500 ${mobileOpen ? 'opacity-100 z-40' : 'opacity-0 -z-10'}`}>
                 <ul className="space-y-2">
@@ -130,35 +156,4 @@ export default function Header(props: any) {
             </div>
         </div>
     );
-}
-
-function useWindowSize() {
-    // Initialize state with undefined width/height so server and client renders match
-    // Learn more here: https://joshwcomeau.com/react/the-perils-of-rehydration/
-    const [windowSize, setWindowSize] = useState({
-        width: undefined,
-        height: undefined,
-    });
-
-    useEffect(() => {
-        // only execute all the code below in client side
-        // Handler to call on window resize
-        function handleResize() {
-            // Set window width/height to state
-            setWindowSize({
-                width: window.innerWidth,
-                height: window.innerHeight,
-            });
-        }
-
-        // Add event listener
-        window.addEventListener("resize", handleResize);
-
-        // Call handler right away so state gets updated with initial window size
-        handleResize();
-
-        // Remove event listener on cleanup
-        return () => window.removeEventListener("resize", handleResize);
-    }, []); // Empty array ensures that effect is only run on mount
-    return windowSize;
 }

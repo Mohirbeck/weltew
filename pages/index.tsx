@@ -8,9 +8,10 @@ import 'swiper/css/navigation';
 import 'swiper/css/pagination';
 import { useEffect, useState } from "react";
 import Image from 'next/image';
+import useWindowDimensions from '../hooks/useWindowDimension';
 
 export default function Home({ banners, categories, secondary_banners, toprated_collections, youtube, instagram, collection_categories }) {
-  const size = useWindowSize();
+  const { width, height } = useWindowDimensions();
 
   return (
     <div className='pb-10'>
@@ -20,15 +21,15 @@ export default function Home({ banners, categories, secondary_banners, toprated_
         <meta name="description" content="Мебель от турецкого бренда с мировым именем Weltew Home с гарантией 24 месяца. ⭐ В наличии более 30 коллекций мягкой и корпусной мебели." />
         <meta property="og:description" content="Мебель от турецкого бренда с мировым именем Weltew Home с гарантией 24 месяца. ⭐ В наличии более 30 коллекций мягкой и корпусной мебели." />
       </Head>
-      {banners.map((banner: any) => (
-        <a key={banner.id} href={banner.link}>
+      {banners.map((banner: any, index: number) => (
+        <a key={index} href={banner.link}>
           <div className="banner w-full relative">
             <Image src={banner.image} fill alt='banner' />
           </div>
         </a>
       ))}
       <Swiper
-        spaceBetween={size.width > 768 ? 30 : 12}
+        spaceBetween={width > 768 ? 30 : 12}
         slidesPerView={"auto"}
         slidesPerGroupSkip={1}
         modules={[Navigation]}
@@ -38,8 +39,8 @@ export default function Home({ banners, categories, secondary_banners, toprated_
         }}
         className='w-full select-none mt-8 group'
       >
-        {categories.map((category: any) => (
-          <SwiperSlide key={category.id} className="!ascpect-square lg:!w-[100px] !w-[80px]">
+        {categories.map((category: any, index: number) => (
+          <SwiperSlide key={index} className="!ascpect-square lg:!w-[100px] !w-[80px]">
             <Link href={`/category/${category.id}`}>
               <div className='ascpect-square w-[80px] lg:w-[100px] text-xs text-primary text-center font-medium'>
                 <div className='mb-2 w-full flex items-center justify-center bg-[#f6f6f6] transtion h-[60px] lg:h-[80px] rounded-xl border border-transparent hover:border-primary hover:bg-white'>
@@ -67,16 +68,22 @@ export default function Home({ banners, categories, secondary_banners, toprated_
         <div className='container mt-12'>
           <h2 className='text-[22px] text-primary font-medium uppercase'><span className='text-secondary font-bold'>#</span>Сеты</h2>
           <div className='grid grid-cols-1 lg:grid-cols-3 gap-[30px] mt-8'>
-            {collection_categories.results.map((item: any) => (
-              <ProductCard
-                key={item.id}
-                id={item.id}
-                name={item.name}
-                category={{ name: '' }}
-                images={[{ image: item.image }]}
-                to={`/collections/category/${item.id}`}
-              />
-            ))}
+            {collection_categories.results.map((item: any, index: number) => {
+              if (item.id !== 2) {
+                return (
+                  <ProductCard
+                    key={index}
+                    id={item.id}
+                    name={item.name}
+                    category={{ name: '' }}
+                    images={[{ image: item.image }]}
+                    availibility={item.availibility}
+                    to={`/collections/category/${item.id}`}
+                  />
+                )
+              }
+            })}
+
           </div>
         </div>
       </section>
@@ -149,8 +156,8 @@ export default function Home({ banners, categories, secondary_banners, toprated_
             }}
             className='w-full select-none !max-h-[700px] !h-full index-vars'
           >
-            {secondary_banners.map((banner: any) => (
-              <SwiperSlide key={banner.id} className="max-h-[700px] h-full">
+            {secondary_banners.map((banner: any, index: number) => (
+              <SwiperSlide key={index} className="max-h-[700px] h-full">
                 <a href={banner.link} className="h-full">
                   <div className='bg-center bg-cover bg-no-repeat w-full h-full py-[30px]' style={{ 'backgroundImage': `url(${banner.image})` }}>
                     <div className='lg-container'>
@@ -183,7 +190,7 @@ export default function Home({ banners, categories, secondary_banners, toprated_
             <div className='grid-cols-3 gap-7 mt-8 hidden lg:grid'>
               {toprated_collections.map((item: any, index: number) => (
                 <ProductCard
-                  key={item.id}
+                  key={index}
                   id={item.id}
                   name={item.name}
                   category={item.category}
@@ -201,8 +208,8 @@ export default function Home({ banners, categories, secondary_banners, toprated_
                 className='w-full select-none group !pb-8 mt-4 index-vars'
               >
 
-                {toprated_collections.map((item: any) => (
-                  <SwiperSlide key={item.id} className='!w-[280px] lg:!w-[400px]'>
+                {toprated_collections.map((item: any, index: number) => (
+                  <SwiperSlide key={index} className='!w-[280px] lg:!w-[400px]'>
                     <ProductCard
                       id={item.id}
                       name={item.name}
@@ -252,8 +259,8 @@ export default function Home({ banners, categories, secondary_banners, toprated_
         <div className='container mx-auto mt-12'>
           <h2 className='text-[22px] text-primary font-medium uppercase'><span className='text-secondary font-bold'>#</span>instagram</h2>
           <div className="grid grid-cols-4 gap-4 relative mt-4">
-            {instagram.posts.map((post: any) => (
-              <a href={post.permalink} target="_blank" className="w-full aspect-square overflow-hidden relative">
+            {instagram.posts.map((post: any, index: number) => (
+              <a href={post.permalink} key={index} target="_blank" className="w-full aspect-square overflow-hidden relative">
                 {post.thumbnail_url && (
                   <Image fill src={post.thumbnail_url} alt={post.permalink}
                     className="w-full h-full object-cover hover:scale-105 transition duration-500" />
@@ -315,35 +322,4 @@ export async function getServerSideProps({ params }) {
       collection_categories
     },
   }
-}
-
-function useWindowSize() {
-  // Initialize state with undefined width/height so server and client renders match
-  // Learn more here: https://joshwcomeau.com/react/the-perils-of-rehydration/
-  const [windowSize, setWindowSize] = useState({
-    width: undefined,
-    height: undefined,
-  });
-
-  useEffect(() => {
-    // only execute all the code below in client side
-    // Handler to call on window resize
-    function handleResize() {
-      // Set window width/height to state
-      setWindowSize({
-        width: window.innerWidth,
-        height: window.innerHeight,
-      });
-    }
-
-    // Add event listener
-    window.addEventListener("resize", handleResize);
-
-    // Call handler right away so state gets updated with initial window size
-    handleResize();
-
-    // Remove event listener on cleanup
-    return () => window.removeEventListener("resize", handleResize);
-  }, []); // Empty array ensures that effect is only run on mount
-  return windowSize;
 }

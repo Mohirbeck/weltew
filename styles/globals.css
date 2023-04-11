@@ -92,6 +92,7 @@
 body {
   background-color: white;
   font-family: "Arimo", sans-serif;
+  /* height: 100%; */
 }
 
 .swiper-pagination-bullet-active {

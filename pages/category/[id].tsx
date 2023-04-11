@@ -3,7 +3,7 @@ import ProductCard from '../../components/ProductCard';
 import { useRouter } from 'next/router'
 import Link from 'next/link';
 
-async function getProducts(page = 0, category) {
+async function getProducts(page = 0, category: any) {
     if (page) {
         page = Number(page) - 1
     }
@@ -22,11 +22,12 @@ export default function Category({ category }) {
             <div className='container mt-12'>
                 <h1 className='text-lg text-center text-primary font-semibold uppercase'>{category.results[0].category}</h1>
                 <div className='grid grid-cols-1 lg:grid-cols-3 gap-[30px] mt-8'>
-                    {category.results.map((item) => (
+                    {category.results.map((item: any) => (
                         <ProductCard
                             key={item.id}
                             id={item.id}
                             name={item.name}
+                            availibility={item.availibility}
                             category={{ name: item.category }}
                             images={item.images}
                         />
@@ -48,7 +49,7 @@ export default function Category({ category }) {
                             key={i}
                             scroll
                             href={`/category/${router.query.id}?page=${i + 1}`}
-                            className={`w-7 aspect-square flex justify-center items-center border border-grey rounded-md ${i + 1 == router.query.page ? 'text-primary bg-grey bg-opacity-50' : 'text-slate-500'}`}
+                            className={`w-7 aspect-square flex justify-center items-center border border-grey rounded-md ${i + 1 == Number(router.query.page) ? 'text-primary bg-grey bg-opacity-50' : 'text-slate-500'}`}
                         >
                             {i + 1}
                         </Link>

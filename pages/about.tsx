@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { useRouter } from "next/router";
 import Link from "next/link";
 
@@ -6,6 +6,22 @@ export default function About({ data }) {
     const router = useRouter();
     let content = data.content;
     content = content.replace(/<img/g, '<img class="!w-full !h-auto"').replace(/<iframe/g, '<iframe class="!w-full !h-auto aspect-video mt-2"')
+    if (typeof window !== 'undefined') {
+        window.localStorage.setItem('breadcrumbs',
+            JSON.stringify([
+                {
+                    label: 'Главная',
+                    path: '/'
+                },
+                {
+                    label: data.page_name,
+                    path: router.route
+                }
+            ])
+        );
+        window.dispatchEvent(new Event("storage"));
+    }
+
     return (
         <div className="lg-container">
             <h1 className="text-xl text-primary font-semibold my-2 lg:my-4">{data.page_name}</h1>
