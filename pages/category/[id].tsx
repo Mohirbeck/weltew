@@ -14,13 +14,32 @@ async function getProducts(page = 0, category: any) {
 
 export default function Category({ category }) {
     const router = useRouter()
+    if (typeof window !== 'undefined') {
+        window.localStorage.setItem('breadcrumbs',
+            JSON.stringify([
+                {
+                    label: 'Главная',
+                    path: '/'
+                },
+                {
+                    label: 'Категории',
+                    path: '/category'
+                },
+                {
+                    label: category.results[0].category.name,
+                    path: router.route
+                }
+            ])
+        );
+        window.dispatchEvent(new Event("storage"));
+    }
     return (
         <div>
             <Head>
-                <title>{category.results[0].category}</title>
+                <title>{category.results[0].category.name}</title>
             </Head>
             <div className='container mt-12'>
-                <h1 className='text-lg text-center text-primary font-semibold uppercase'>{category.results[0].category}</h1>
+                <h1 className='text-lg text-center text-primary font-semibold uppercase'>{category.results[0].category.name}</h1>
                 <div className='grid grid-cols-1 lg:grid-cols-3 gap-[30px] mt-8'>
                     {category.results.map((item: any) => (
                         <ProductCard
@@ -28,7 +47,7 @@ export default function Category({ category }) {
                             id={item.id}
                             name={item.name}
                             availibility={item.availibility}
-                            category={{ name: item.category }}
+                            category={item.category}
                             images={item.images}
                         />
                     ))}

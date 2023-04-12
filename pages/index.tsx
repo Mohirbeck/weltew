@@ -12,6 +12,17 @@ import useWindowDimensions from '../hooks/useWindowDimension';
 
 export default function Home({ banners, categories, secondary_banners, toprated_collections, youtube, instagram, collection_categories }) {
   const { width, height } = useWindowDimensions();
+  if (typeof window !== 'undefined') {
+    window.localStorage.setItem('breadcrumbs',
+      JSON.stringify([
+        {
+          label: 'Главная',
+          path: '/'
+        },
+      ])
+    );
+    window.dispatchEvent(new Event("storage"));
+  }
 
   return (
     <div className='pb-10'>
@@ -21,13 +32,41 @@ export default function Home({ banners, categories, secondary_banners, toprated_
         <meta name="description" content="Мебель от турецкого бренда с мировым именем Weltew Home с гарантией 24 месяца. ⭐ В наличии более 30 коллекций мягкой и корпусной мебели." />
         <meta property="og:description" content="Мебель от турецкого бренда с мировым именем Weltew Home с гарантией 24 месяца. ⭐ В наличии более 30 коллекций мягкой и корпусной мебели." />
       </Head>
-      {banners.map((banner: any, index: number) => (
-        <a key={index} href={banner.link}>
-          <div className="banner w-full relative">
-            <Image src={banner.image} fill alt='banner' />
-          </div>
-        </a>
-      ))}
+      <Swiper
+        spaceBetween={30}
+        slidesPerView={1}
+        modules={[Navigation, Pagination]}
+        navigation={{
+          nextEl: '.next',
+          prevEl: '.prev',
+        }}
+        pagination={{
+          clickable: true,
+        }}
+        autoplay={{
+          delay: 5000,
+        }}
+      >
+        {banners.map((banner: any, index: number) => (
+          <SwiperSlide className='banner w-full relative'>
+            <a className='banner w-full relative' key={index} href={banner.link}>
+              <div className="banner w-full relative">
+                <Image src={banner.image} fill alt='banner' />
+              </div>
+            </a>
+          </SwiperSlide>
+        ))}
+        <button className='next absolute right-2 top-1/2 -translate-y-1/2 z-20'>
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" className="lg:w-12 lg:h-12 w-6 h-6 stroke-secondary stroke-[3]">
+            <path strokeLinecap="round" strokeLinejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5" />
+          </svg>
+        </button>
+        <button className='prev absolute left-2 top-1/2 -translate-y-1/2 z-20'>
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" className="lg:w-12 lg:h-12 w-6 h-6 stroke-secondary stroke-[3]">
+            <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5" />
+          </svg>
+        </button>
+      </Swiper>
       <Swiper
         spaceBetween={width > 768 ? 30 : 12}
         slidesPerView={"auto"}
@@ -153,6 +192,9 @@ export default function Home({ banners, categories, secondary_banners, toprated_
             }}
             pagination={{
               clickable: true,
+            }}
+            autoplay={{
+              delay: 5000,
             }}
             className='w-full select-none !max-h-[700px] !h-full index-vars'
           >

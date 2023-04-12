@@ -1,12 +1,26 @@
 import React from "react";
 import { useRouter } from "next/router";
 import Link from "next/link";
-import Image from "next/image";
 import { useState } from "react";
 
 export default function About({ tips }) {
     const router = useRouter();
     const [open, setOpen] = useState(-1);
+    if (typeof window !== 'undefined') {
+        window.localStorage.setItem('breadcrumbs',
+            JSON.stringify([
+                {
+                    label: 'Главная',
+                    path: '/'
+                },
+                {
+                    label: 'Советы и идеи',
+                    path: router.route
+                }
+            ])
+        );
+        window.dispatchEvent(new Event("storage"));
+    }
     return (
         <div className="lg-container">
             <h1 className="text-xl text-primary font-semibold my-2 lg:my-4">Каталоги</h1>

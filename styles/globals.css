@@ -99,6 +99,9 @@ body {
   outline: 1px solid #fec33b;
   outline-offset: 3px;
 }
+.swiper-slide-thumb-active div {
+  border: 5px solid #fec33b;
+}
 
 *::selection {
   background-color: #fec33b;

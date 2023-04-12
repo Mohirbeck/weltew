@@ -3,6 +3,21 @@ import Link from 'next/link';
 import Image from 'next/image';
 
 export default function Category({ categories }) {
+    if (typeof window !== 'undefined') {
+        window.localStorage.setItem('breadcrumbs',
+            JSON.stringify([
+                {
+                    label: 'Главная',
+                    path: '/'
+                },
+                {
+                    label: 'Категории',
+                    path: '/category'
+                }
+            ])
+        );
+        window.dispatchEvent(new Event("storage"));
+    }
     return (
         <div className='container mt-12'>
             <Head>

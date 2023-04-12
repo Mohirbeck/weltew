@@ -49,8 +49,31 @@ export default function Product({ product, similar, cart }) {
     ],
     alt: product.name,
   }));
+  if (typeof window !== 'undefined') {
+    window.localStorage.setItem('breadcrumbs',
+      JSON.stringify([
+        {
+          label: 'Главная',
+          path: '/'
+        },
+        {
+          label: 'Категории',
+          path: '/category'
+        },
+        {
+          label: product.category?.name,
+          path: "/category/" + product.category.id
+        },
+        {
+          label: product.name,
+          path: "/category/" + product.category.id + "/" + product.id
+        }
+      ])
+    );
+    window.dispatchEvent(new Event("storage"));
+  }
   return (
-    <div className='lg-container pt-6 relative'>
+    <div className='lg-container pt-6 relative mt-6'>
       <Lightbox
         open={index >= 0}
         index={index}
@@ -102,7 +125,7 @@ export default function Product({ product, similar, cart }) {
                 </li>
                 <li className='flex justify-between'>
                   <span className='text-primary'>Категория:</span>
-                  <span className='text-primary font-bold text-center'>{product.category}</span>
+                  <span className='text-primary font-bold text-center'>{product.category?.name}</span>
                 </li>
               </ul>
               <button className='btn bg-primary hover:bg-[#0d4770] text-white space-x-2 mt-2 w-full' onClick={() => addToCart(product)}>
@@ -182,7 +205,7 @@ export default function Product({ product, similar, cart }) {
                 </li>
                 <li className='flex justify-between'>
                   <span className='text-primary'>Категория:</span>
-                  <span className='text-primary font-bold text-center'>{product.category}</span>
+                  <span className='text-primary font-bold text-center'>{product.category?.name}</span>
                 </li>
               </ul>
               <button className='btn bg-primary hover:bg-[#0d4770] text-white space-x-2 mt-2 w-full' onClick={() => addToCart(product)}>

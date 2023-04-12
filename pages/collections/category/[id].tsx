@@ -14,6 +14,25 @@ async function getProducts(page = 0, category: any) {
 
 export default function Category({ category }) {
     const router = useRouter()
+    if (typeof window !== 'undefined') {
+        window.localStorage.setItem('breadcrumbs',
+            JSON.stringify([
+                {
+                    label: 'Главная',
+                    path: '/'
+                },
+                {
+                    label: 'Сеты',
+                    path: '/collections/category'
+                },
+                {
+                    label: category.results[0].category.name,
+                    path: router.route
+                }
+            ])
+        );
+        window.dispatchEvent(new Event("storage"));
+    }
     return (
         <div>
             <Head>

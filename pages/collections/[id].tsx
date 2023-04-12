@@ -1,5 +1,5 @@
 import { Swiper, SwiperSlide } from 'swiper/react';
-import { Navigation, Pagination } from 'swiper';
+import { Navigation, Pagination, Thumbs, Autoplay } from 'swiper';
 import 'swiper/css';
 import 'swiper/css/navigation';
 import 'swiper/css/pagination';
@@ -14,7 +14,31 @@ import "yet-another-react-lightbox/plugins/thumbnails.css";
 import useWindowDimensions from '../../hooks/useWindowDimension';
 
 export default function Product({ collection, similar, collections, cart }) {
+  if (typeof window !== 'undefined') {
+    window.localStorage.setItem('breadcrumbs',
+      JSON.stringify([
+        {
+          label: 'Главная',
+          path: '/'
+        },
+        {
+          label: 'Сеты',
+          path: '/collections/category'
+        },
+        {
+          label: collection.category.name,
+          path: "/collections/category/" + collection.category.id
+        },
+        {
+          label: collection.name,
+          path: "/collections/category/" + collection.category.id + "/" + collection.id
+        }
+      ])
+    );
+    window.dispatchEvent(new Event("storage"));
+  }
   let ps = [];
+  const [thumbsSwiper, setThumbsSwiper] = useState(null);
   const [products, setProducts] = useState([]);
   const [default_products, setDefaultProducts] = useState([]);
   useEffect(() => {
@@ -120,8 +144,13 @@ export default function Product({ collection, similar, collections, cart }) {
     const item = cart.cart.find((item: any) => item.id === collection.id);
     let new_cart = [];
     if (item) {
+      return;
     } else {
-      new_cart = [...cart.cart, { id: collection.id, collection: true }];
+      if (default_products.length) {
+        new_cart = [...cart.cart, { id: collection.id, collection: true }];
+      } else {
+        return;
+      }
     }
     cart.setCart(new_cart)
     localStorage.setItem('cart', JSON.stringify(new_cart));
@@ -134,7 +163,7 @@ export default function Product({ collection, similar, collections, cart }) {
   }
 
   return (
-    <div className='lg-container pt-6 relative scroll-smooth'>
+    <div className='lg-container pt-6 relative scroll-smooth mt-6'>
       <Lightbox
         open={index >= 0}
         index={index}
@@ -146,7 +175,8 @@ export default function Product({ collection, similar, collections, cart }) {
       <div className="grid lg:grid-cols-4 grid-cols-3 gap-x-12">
         <div className="col-span-3">
           <Swiper
-            modules={[Navigation, Pagination]}
+            modules={[Navigation, Thumbs, Autoplay]}
+            thumbs={{ swiper: thumbsSwiper && !thumbsSwiper.destroyed ? thumbsSwiper : null }}
             spaceBetween={50}
             slidesPerView={1}
             navigation={width > 768 ? {
@@ -154,7 +184,10 @@ export default function Product({ collection, similar, collections, cart }) {
               prevEl: '.prev',
             } : false}
             loop
-            pagination={{ clickable: true }}
+            autoplay={{
+              delay: 5000,
+              disableOnInteraction: false,
+            }}
             className='index-vars'
           >
             {collection.images.map((image: any, i: number) => (
@@ -173,6 +206,22 @@ export default function Product({ collection, similar, collections, cart }) {
                 <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5" />
               </svg>
             </button>
+          </Swiper>
+          <Swiper
+            modules={[Thumbs]}
+            watchSlidesProgress
+            onSwiper={setThumbsSwiper}
+            spaceBetween={6}
+            slidesPerView={"auto"}
+            slidesPerGroupSkip={1}
+            className="mt-4"
+          >
+            {collection.images.map((image: any, i: number) => (
+              <SwiperSlide key={image.id} className="!w-[90px] lg:h-[60px] h-[60px]">
+                <div className='w-[90px] lg:h-[60px] h-[60px] bg-center bg-no-repeat bg-cover' style={{ backgroundImage: `url(${image.image})` }}>
+                </div>
+              </SwiperSlide>
+            ))}
           </Swiper>
           <div className='flex-col flex lg:hidden'>
             <div className='w-full px-2 py-4'>
@@ -308,7 +357,7 @@ export default function Product({ collection, similar, collections, cart }) {
           </div>
         </div>
       </div>
-    </div>
+    </div >
   );
 }
 

@@ -11,7 +11,7 @@ export type BreadcrumbsProps = {
 
 const Breadcrumbs = ({ items }: BreadcrumbsProps) => {
     return (
-        <div className="flex gap-2 items-start">
+        <div className="space-x-3 whitespace-nowrap overflow-x-auto">
             {items.map((crumb: any, i: number) => {
                 const isLastItem = i === items.length - 1;
                 if (!isLastItem) {
@@ -20,16 +20,16 @@ const Breadcrumbs = ({ items }: BreadcrumbsProps) => {
                             <Link
                                 href={crumb.path}
                                 key={i}
-                                className="text-indigo-500 hover:text-indigo-400 hover:underline"
+                                className="text-sm"
                             >
                                 {crumb.label}
                             </Link>
                             {/* separator */}
-                            <span> / </span>
+                            <span className="text-secondary text-sm"> / </span>
                         </>
                     );
                 } else {
-                    return (<span key={i}>{crumb.label}</span>);
+                    return (<span className="text-sm" key={i}>{crumb.label}</span>);
                 }
             })}
         </div>

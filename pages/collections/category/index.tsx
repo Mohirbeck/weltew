@@ -3,6 +3,21 @@ import Link from 'next/link';
 import ProductCard from '../../../components/ProductCard';
 
 export default function Category({ categories }) {
+    if (typeof window !== 'undefined') {
+        window.localStorage.setItem('breadcrumbs',
+            JSON.stringify([
+                {
+                    label: 'Главная',
+                    path: '/'
+                },
+                {
+                    label: 'Сеты',
+                    path: '/collections/category'
+                }
+            ])
+        );
+        window.dispatchEvent(new Event("storage"));
+    }
     return (
         <div>
             <Head>
@@ -17,7 +32,7 @@ export default function Category({ categories }) {
                             id={item.id}
                             name={item.name}
                             category={{ name: '' }}
-                            images={[{image: item.image}]}
+                            images={[{ image: item.image }]}
                             to={`/collections/category/${item.id}`}
                         />
                     ))}

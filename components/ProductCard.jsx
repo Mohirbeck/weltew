@@ -59,15 +59,17 @@ export default function ProductCard({
           : "bg-white border border-grey col-span-1 relative"
       }
     >
-      <div
-        className={
-          horizontal
-            ? "absolute z-10 top-2 right-2 bg-[#d02d8b] text-white text-sm uppercase font-medium px-4 py-1 rounded-full"
-            : "absolute z-10 top-2 right-2 bg-[#d02d8b] text-white text-xs uppercase font-semibold px-4 py-1 rounded-full"
-        }
-      >
-        {availibility ? "В наличии" : "Предзаказ"}
-      </div>
+      {availibility && (
+        <div
+          className={
+            horizontal
+              ? "absolute z-10 top-2 right-2 bg-[#d02d8b] text-white text-sm uppercase font-medium px-4 py-1 rounded-full"
+              : "absolute z-10 top-2 right-2 bg-[#d02d8b] text-white text-xs uppercase font-semibold px-4 py-1 rounded-full"
+          }
+        >
+          В наличии
+        </div>
+      )}
 
       <Link href={to}>
         <Images />
@@ -100,7 +102,7 @@ export default function ProductCard({
           {typeof category === "string" ? category : category.name}
         </Link>
         <div
-          className={horizontal ? "absolute w-full left-0 bottom-0" : "mt-12"}
+          className={horizontal ? "absolute w-full left-3 bottom-0" : "mt-12"}
         >
           <Link
             href={to}
