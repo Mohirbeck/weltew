@@ -103,7 +103,7 @@ export default function Home({ banners, categories, secondary_banners, toprated_
           </svg>
         </button>
       </Swiper>
-      <section>
+      {/* <section>
         <div className='container mt-12'>
           <h2 className='text-[22px] text-primary font-medium uppercase'><span className='text-secondary font-bold'>#</span>Сеты</h2>
           <div className='grid grid-cols-1 lg:grid-cols-3 gap-[30px] mt-8'>
@@ -125,11 +125,11 @@ export default function Home({ banners, categories, secondary_banners, toprated_
 
           </div>
         </div>
-      </section>
-      {/* <section>
+      </section> */}
+      <section>
         <div className='container mx-auto'>
           <div className='mt-16'>
-            <h2 className='text-[22px] text-primary font-medium uppercase'><span className='text-secondary font-bold'>#</span>Бестселлеры</h2>
+            <h2 className='text-[22px] text-primary font-medium uppercase'><span className='text-secondary font-bold'>#</span>Сеты</h2>
             <Swiper
               spaceBetween={30}
               slidesPerView={"auto"}
@@ -145,24 +145,16 @@ export default function Home({ banners, categories, secondary_banners, toprated_
               className='w-full select-none group !pb-8 mt-4 index-vars'
             >
 
-              {bestseller_collections.map((item: any) => (
+              {collection_categories.results.map((item: any, index: number) => (
                 <SwiperSlide key={item.id} className='!w-[280px] lg:!w-[400px]'>
                   <ProductCard
+                    key={index}
                     id={item.id}
                     name={item.name}
-                    category={item.category}
-                    images={item.images}
-                    to={`/collections/${item.id}`}
-                  />
-                </SwiperSlide>
-              ))}
-              {bestseller_products.map((item: any) => (
-                <SwiperSlide key={item.id} className='!w-[280px] lg:!w-[400px]'>
-                  <ProductCard
-                    id={item.id}
-                    name={item.name}
-                    category={item.category}
-                    images={item.images}
+                    category={{ name: '' }}
+                    images={[{ image: item.image }]}
+                    availibility={item.availibility}
+                    to={`/collections/category/${item.id}`}
                   />
                 </SwiperSlide>
               ))}
@@ -179,7 +171,7 @@ export default function Home({ banners, categories, secondary_banners, toprated_
             </Swiper>
           </div>
         </div>
-      </section> */}
+      </section>
       <section>
         <div className='lg:h-[700px] h-[200px] w-full mt-12'>
           <Swiper
