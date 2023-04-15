@@ -46,7 +46,7 @@ export default function Category({ categories }) {
 
 
 export async function getServerSideProps({ params }) {
-    const res = await fetch(`${process.env.apiUrl}/categories/`)
+    const res = await fetch(`${process.env.apiUrl}/categories/?limit=100`)
     const categories = await res.json()
 
     return {
