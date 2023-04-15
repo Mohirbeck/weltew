@@ -35,7 +35,7 @@ export default function Home({ banners, categories, secondary_banners, toprated_
       <Swiper
         spaceBetween={30}
         slidesPerView={1}
-        modules={[Navigation, Pagination]}
+        modules={[Navigation]}
         navigation={{
           nextEl: '.next',
           prevEl: '.prev',

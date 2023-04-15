@@ -80,7 +80,7 @@ export default function Header(props: any) {
                                 </svg>
                             </button>
                         </div>
-                        <div>
+                        <div className="z-[100]">
                             <label tabIndex={0} className="btn btn-ghost hover:bg-transparent h-10 px-0" htmlFor="cart-drawer">
                                 <div className="indicator">
                                     <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-[30px] drawer-button" fill="none" viewBox="0 0 30 24" stroke="currentColor">

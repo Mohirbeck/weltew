@@ -195,7 +195,7 @@ function MyApp({ Component, pageProps, navigationProps, ...rest }) {
                         <Component {...pageProps} cart={{ cart, setCart }} collections={{ collections, setCollections }} setToast={setToast} />
                     </div>
                 </React.StrictMode>
-                <div className={`toast toast-top toast-end z-50 transition-all duration-500 ${toast.show ? 'opacity-100' : 'opacity-0'}`}>
+                <div className={`toast toast-top toast-end transition-all duration-500 ${toast.show ? 'opacity-100 z-50' : 'opacity-0'}`}>
                     <div className={`alert rounded ${toast.success ? 'alert-success' : 'alert-error'}`}>
                         <div>
                             <span className='text-white text-lg'>{toast.text}</span>
