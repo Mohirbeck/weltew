@@ -14,6 +14,17 @@ async function getProducts(page = 0, q: any) {
 
 export default function Category({ data }) {
     const router = useRouter()
+    if (typeof window !== 'undefined') {
+        window.localStorage.setItem('breadcrumbs',
+            JSON.stringify([
+                {
+                    label: 'Главная',
+                    path: '/'
+                },
+            ])
+        );
+        window.dispatchEvent(new Event("storage"));
+    }
     return (
         <div>
             <Head>

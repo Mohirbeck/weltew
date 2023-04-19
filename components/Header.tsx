@@ -8,6 +8,7 @@ import useWindowDimensions from '../hooks/useWindowDimension';
 
 export default function Header(props: any) {
     const [mobileOpen, setMobileOpen] = useState(false);
+    const [searchOpen, setSearchOpen] = useState(false);
     const handleDrawerToggle = () => {
         setMobileOpen(!mobileOpen);
     };
@@ -74,13 +75,13 @@ export default function Header(props: any) {
                                     </svg>
                                 </div>
                             </div>
-                            <button className="lg:hidden block" aria-label="Поиск">
+                            <button className="lg:hidden block" aria-label="Поиск" onClick={() => setSearchOpen(true)}>
                                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} className="w-6 h-6 stroke-primary">
                                     <path strokeLinecap="round" strokeLinejoin="round" d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z" />
                                 </svg>
                             </button>
                         </div>
-                        <a href="https://t.me/online_weltewhome" className="btn btn-ghost hover:bg-transparent h-10 px-0 flex items-center justify-center">
+                        <a href="https://t.me/weltew_admin" className="btn btn-ghost hover:bg-transparent h-10 px-0 flex items-center justify-center">
                             <svg xmlns="http://www.w3.org/2000/svg" x="0px" y="0px"
                                 className="w-6 h-6 fill-[#2da4dc]"
                                 viewBox="0 0 50 50">
@@ -114,11 +115,33 @@ export default function Header(props: any) {
                         </div>
                     </div>
                 </div>
-                <div className={`bg-white border-y border-grey ${breadcrumbs.length > 1 ? 'block' : 'hidden'}`}>
+                <div className={`bg-white border-y border-grey ${breadcrumbs.length > 1 && !searchOpen ? 'block' : 'hidden'}`}>
                     <div className="lg-container px-4 py-2">
                         <Breadcrumbs
                             items={breadcrumbs}
                         />
+                    </div>
+                </div>
+                <div className={`bg-white border-y border-grey w-full ${searchOpen ? 'block' : 'hidden'}`}>
+                    <div className="relative w-full">
+                        <input
+                            type="text"
+                            name="search"
+                            id="search"
+                            className="block w-full h-10 pl-4 py-2 bg-[#f2f2f2] border-[#f2f2f2] pr-10 sm:text-sm transition focus:bg-white focus:border-secondary focus:outline-none focus:ring-2 focus:ring-secondary"
+                            placeholder="Поиск"
+                            onKeyDown={(e) => {
+                                if (e.key === 'Enter') {
+                                    router.push(`/search?q=${e.currentTarget.value}`);
+                                    setSearchOpen(false);
+                                }
+                            }}
+                        />
+                        <div className="absolute inset-y-0 right-0 flex items-center pr-3">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} className="w-6 h-6 stroke-primary">
+                                <path strokeLinecap="round" strokeLinejoin="round" d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z" />
+                            </svg>
+                        </div>
                     </div>
                 </div>
             </div>
