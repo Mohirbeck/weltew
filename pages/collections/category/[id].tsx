@@ -63,7 +63,7 @@ export default function Category({ category }) {
                             </svg>
                         </Link>
                     )}
-                    {(category.next || category.previous) && Array.from({ length: (category.count / 15) + 1 }, (_, i) => (
+                    {(category.next || category.previous) && Array.from({ length: category.count % 15 === 0 ? (category.count / 15) : (category.count / 15) + 1 }, (_, i) => (
                         <Link
                             key={i}
                             scroll
