@@ -7,8 +7,9 @@ import Link from 'next/link';
 import ProductCard from '../../components/ProductCard';
 import Lightbox from "yet-another-react-lightbox";
 import "yet-another-react-lightbox/styles.css";
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 // import Thumbnails from "yet-another-react-lightbox/plugins/thumbnails";
+import Zoom from "yet-another-react-lightbox/plugins/zoom";
 import "yet-another-react-lightbox/plugins/thumbnails.css";
 import useWindowDimensions from '../../hooks/useWindowDimension';
 
@@ -39,15 +40,20 @@ export default function Product({ product, similar, cart }) {
     cart_count_el.innerHTML = new_cart.length.toString();
   };
 
+  const breakpoints = [4320, 2160, 1080, 640, 384, 256, 128];
   const slides = product.images.map((image: any) => ({
     src: nextImageUrl(image.image),
-    srcSet: [
-      `${nextImageUrl(image.image)} 1920w`,
-      `${nextImageUrl(image.image)} 1280w`,
-      `${nextImageUrl(image.image)} 640w`,
-      `${nextImageUrl(image.image)} 320w`,
-    ],
     alt: product.name,
+    width: 1920,
+    height: 1080,
+    srcSet: breakpoints.map((breakpoint) => {
+      const breakpointHeight = Math.round((height / width) * breakpoint);
+      return {
+        src: nextImageUrl(image.image),
+        width: breakpoint,
+        height: breakpointHeight,
+      };
+    }),
   }));
   if (typeof window !== 'undefined') {
     window.localStorage.setItem('breadcrumbs',
@@ -79,6 +85,22 @@ export default function Product({ product, similar, cart }) {
         index={index}
         close={() => setIndex(-1)}
         slides={slides}
+        carousel={{
+          finite: true,
+        }}
+        plugins={[Zoom]}
+        animation={{ zoom: 500 }}
+        zoom={{
+          maxZoomPixelRatio: 1,
+          zoomInMultiplier: 2,
+          doubleTapDelay: 300,
+          doubleClickDelay: 300,
+          doubleClickMaxStops: 2,
+          keyboardMoveDistance: 50,
+          wheelZoomDistanceFactor: 100,
+          pinchZoomDistanceFactor: 100,
+          scrollToZoom: false,
+        }}
       />
       <h3 className='text-xl text-primary text-center font-bold mb-4 lg:hidden'>{product.name}</h3>
       <hr className='lg:hidden' />

@@ -10,6 +10,7 @@ import Lightbox from "yet-another-react-lightbox";
 import "yet-another-react-lightbox/styles.css";
 import { useEffect, useState } from 'react';
 // import Thumbnails from "yet-another-react-lightbox/plugins/thumbnails";
+import Zoom from "yet-another-react-lightbox/plugins/zoom";
 import "yet-another-react-lightbox/plugins/thumbnails.css";
 import useWindowDimensions from '../../hooks/useWindowDimension';
 
@@ -98,15 +99,19 @@ export default function Product({ collection, similar, collections, cart }) {
 
   const { width, height } = useWindowDimensions();
 
-
+  const breakpoints = [4320, 2160, 1080, 640, 384, 256, 128];
   const slides = collection.images.map((image: any) => ({
     src: nextImageUrl(image.image),
-    srcSet: [
-      `${nextImageUrl(image.image)} 1920w`,
-      `${nextImageUrl(image.image)} 1280w`,
-      `${nextImageUrl(image.image)} 640w`,
-      `${nextImageUrl(image.image)} 320w`,
-    ],
+    width: 1920,
+    height: 1080,
+    srcSet: breakpoints.map((breakpoint) => {
+      const breakpointHeight = Math.round((height / width) * breakpoint);
+      return {
+        src: nextImageUrl(image.image),
+        width: breakpoint,
+        height: breakpointHeight,
+      };
+    }),
     alt: collection.name,
   }));
   const changeCount = (count: number, id: number) => {
@@ -169,6 +174,22 @@ export default function Product({ collection, similar, collections, cart }) {
         index={index}
         close={() => setIndex(-1)}
         slides={slides}
+        carousel={{
+          finite: true,
+        }}
+        plugins={[Zoom]}
+        animation={{ zoom: 500 }}
+        zoom={{
+          maxZoomPixelRatio: 1,
+          zoomInMultiplier: 2,
+          doubleTapDelay: 300,
+          doubleClickDelay: 300,
+          doubleClickMaxStops: 2,
+          keyboardMoveDistance: 50,
+          wheelZoomDistanceFactor: 100,
+          pinchZoomDistanceFactor: 100,
+          scrollToZoom: false,
+        }}
       />
       <h3 className='text-xl text-primary text-center font-bold mb-4 lg:hidden'>{collection.name}</h3>
       <hr className='lg:hidden' />
@@ -272,6 +293,23 @@ export default function Product({ collection, similar, collections, cart }) {
                       <div className='flex flex-col lg:flex-row lg:items-center lg:flex-grow justify-between space-y-4 lg:space-y-0'>
                         <Link className='text-primary font-medium text-sm lg:text-lg' href={`/products/${product.id}`}>{product.name}</Link>
                         <Counter min={0} max={15} count={product.quantity} changeCount={(count: number) => changeCount(count, product.id)} />
+                      </div>
+                    </div>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+          <h5 className='lg:my-8 my-4 text-primary font-semibold text-lg lg:text-2xl text-center' id='complementaries'>Дополнительные продукты</h5>
+          <table className='w-full border-collapse'>
+            <tbody>
+              {collection.complementaries.map((collection: any, i: number) => (
+                <tr key={collection.id} className='flex flex-col lg:flex-row items-center justify-between'>
+                  <td className='border-[0.5px] border-grey w-full lg:p-4 p-2'>
+                    <div className='flex items-center lg:space-x-10 space-x-3'>
+                      <img src={collection.images[0]?.image || '/images/placeholder.webp'} alt={collection.name} className='lg:h-[160px] h-[75px] aspect-video object-contain' />
+                      <div className='flex flex-col lg:flex-row lg:items-center lg:flex-grow justify-between space-y-4 lg:space-y-0'>
+                        <Link className='text-primary font-medium text-sm lg:text-lg' href={`/collection/${collection.id}`}>{collection.name} - {collection.category.name}</Link>
                       </div>
                     </div>
                   </td>

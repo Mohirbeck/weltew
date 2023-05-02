@@ -92,6 +92,12 @@ export default function Footer(props) {
                             <li>
                                 <Link href={'/contacts'} className="text-primary mb-3 font-medium hover:text-[#d02d8b] transition">Магазины</Link>
                             </li>
+                            <li>
+                                <Link href={'/collections/category'} className="text-primary mb-3 font-medium hover:text-[#d02d8b] transition">Сеты</Link>
+                            </li>
+                            <li>
+                                <Link href={'/category'} className="text-primary mb-3 font-medium hover:text-[#d02d8b] transition">Категории</Link>
+                            </li>
                         </ul>
                     </div>
                 </nav>
