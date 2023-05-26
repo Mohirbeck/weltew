@@ -356,7 +356,11 @@ export async function getServerSideProps({ params }) {
   res = await fetch(`${process.env.apiUrl}/social/instagram`).then((res) => res.json())
   const instagram = res.results[0]
   res = await fetch(`https://graph.instagram.com/v15.0/me/media?fields=media_url,thumbnail_url,permalink&access_token=${instagram?.token}`).then((res) => res.json())
-  instagram.posts = res.data.slice(0, 8)
+  if (res.data) {
+    instagram.posts = res.data.slice(0, 8)
+  } else {
+    instagram.posts = []
+  }
   res = await fetch(`${process.env.apiUrl}/collections/categories`)
   const collection_categories = await res.json()
 
