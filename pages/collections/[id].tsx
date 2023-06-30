@@ -309,7 +309,7 @@ export default function Product({ collection, similar, collections, cart }) {
                     <div className='flex items-center lg:space-x-10 space-x-3'>
                       <img src={collection.images[0]?.image || '/images/placeholder.webp'} alt={collection.name} className='lg:h-[160px] h-[75px] aspect-video object-contain' />
                       <div className='flex flex-col lg:flex-row lg:items-center lg:flex-grow justify-between space-y-4 lg:space-y-0'>
-                        <Link className='text-primary font-medium text-sm lg:text-lg' href={`/collection/${collection.id}`}>{collection.name} - {collection.category.name}</Link>
+                        <Link className='text-primary font-medium text-sm lg:text-lg' href={`/collections/${collection.id}`}>{collection.name} - {collection.category.name}</Link>
                       </div>
                     </div>
                   </td>
